@@ -1,4 +1,4 @@
-
+import Link from 'next/link'
 import Image from "next/image";
 import { ShoppingCart, Menu, Search } from "lucide-react";
 import SignInMenu from "./SignInMenue";
@@ -28,8 +28,19 @@ export default function Header() {
       {/* Right section */}
       <div className="flex items-center gap-4">
           <Search className="w-5 h-5 cursor-pointer" />
-        <button className="hover:text-blue-600">Order now</button>
-        <button className="hover:text-blue-600">My file</button>
+        <Link
+        href="/new-order"
+        className="hover:text-blue-600 transition-colors duration-200"
+      >
+        Order now
+      </Link>
+
+      <Link
+        href="/my-file"
+        className="hover:text-blue-600 transition-colors duration-200"
+      >
+        My file
+      </Link>
         <SignInMenu />
         <div className="relative">
           <ShoppingCart className="w-6 h-6 cursor-pointer" />

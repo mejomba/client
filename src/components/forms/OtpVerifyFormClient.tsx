@@ -15,7 +15,7 @@ export default function OtpVerifyFormClient({
   const [state, formAction] = useFormState(verifyOtpAction, { error: '', success: false })
 
   // 🕒 تایمر شمارش معکوس (مثلاً 60 ثانیه)
-  const [seconds, setSeconds] = useState(6)
+  const [seconds, setSeconds] = useState(120)
   const [canResend, setCanResend] = useState(false)
 
   useEffect(() => {
@@ -32,15 +32,8 @@ export default function OtpVerifyFormClient({
   const handleResend = async () => {
     try {
       const res = await api.post('/auth/resend-otp/', {phone})
-      // const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/resend-otp`, {
-      //   method: 'POST',
-      //   headers: { 'Content-Type': 'application/json' },
-      //   body: JSON.stringify({ phone }),
-      //   credentials: 'include'
-      // })
 
-      console.log(res)
-      setSeconds(60)
+      setSeconds(120)
       setCanResend(false)
     } catch (e) {
 
@@ -68,7 +61,7 @@ export default function OtpVerifyFormClient({
       <input
         type="text"
         name="otp_code"
-        placeholder="کد ۶ رقمی"
+        placeholder="کد ۵ رقمی"
         className={`w-full px-3 py-2 mt-1 text-right placeholder-gray-400 border rounded-md shadow-sm focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 ${
           state.error ? 'border-red-500' : 'border-gray-300'
         }`}

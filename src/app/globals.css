@@ -25,3 +25,16 @@ body {
     text-wrap: balance;
   }
 }
+
+.x {
+  display: grid;
+}
+
+/* اسکرول‌بار فقط برای سایدبار در سمت چپ */
+.sidebar-scroll {
+  direction: rtl;         /* کل جهت را برعکس می‌کند */
+}
+
+.sidebar-scroll > * {
+  direction: ltr;         /* محتوا را دوباره به حالت عادی برمی‌گرداند */
+}

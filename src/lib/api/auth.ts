@@ -13,7 +13,6 @@ export async function sendOtp(phone: string) {
 }
 
 export async function phoneCheck(phone: string, method: string) {
-    console.log('phone chekk...')
     const response = await api.post('auth/phone-check/', { phone, method })
     return response.data
 }

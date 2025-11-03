@@ -43,7 +43,7 @@ export default function SignInMenu() {
                             <ul className="mt-4 space-y-2 text-gray-700 text-sm">
                                 <li>
                                     <Link
-                                        href="/orders"
+                                        href="/profile"
                                         className="flex items-center gap-2 px-2 py-2 rounded hover:bg-gray-100"
                                     >
                                         <ClipboardList className="w-4 h-4"/>

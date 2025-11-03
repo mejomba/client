@@ -4,6 +4,7 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import api from "@/lib/axios";
 import { z } from 'zod'
+import axios from "axios/index";
 
 // اعتبارسنجی با Zod (اختیاری ولی حرفه‌ای)
 const phoneSchema = z.object({
@@ -72,7 +73,6 @@ export async function verifyOtpAction(prevState: any, formData: FormData) {
                 phone:phone,
                 code:code,
             })
-    console.log(res)
 
     if (![200, 201].includes(res.status)) throw new Error('کد وارد شده نادرست است.')
 
@@ -81,7 +81,7 @@ export async function verifyOtpAction(prevState: any, formData: FormData) {
     if (data.access && data.refresh) {
       const cookieStore = cookies()
       cookieStore.set('access', data.access, { httpOnly: true })
-      cookieStore.set('refresh', data.refresh, { httpOnly: true })
+      cookieStore.set('refresh', data.refresh, { httpOnly: true})
     }
   } catch (error: any) {
   if (error.response) {
@@ -121,7 +121,7 @@ export async function verifyOtpAction(prevState: any, formData: FormData) {
   return { error: error.message || "خطای ناشناخته‌ای رخ داد." };
 }
 
-  redirect('/')
+  redirect('/profile/')
 }
 
 // 🔹 ورود با رمز عبور
@@ -135,7 +135,6 @@ export async function passwordLoginAction(prevState: any, formData: FormData) {
                 phone:phone,
                 password:password,
             })
-    console.log(res)
 
     if (![200, 201].includes(res.status)) throw new Error('کد وارد شده نادرست است.')
 
@@ -149,7 +148,6 @@ export async function passwordLoginAction(prevState: any, formData: FormData) {
   } catch (error: any) {
     if (error.response) {
       const data = error.response.data;
-      console.log(data)
 
       // اگر خطا به شکل {"detail": "..."} باشد
       if (data.detail) {
@@ -185,7 +183,7 @@ export async function passwordLoginAction(prevState: any, formData: FormData) {
     return {error: error.message || "خطای ناشناخته‌ای رخ داد."};
   }
 
-  redirect('/')
+  redirect('/profile/')
 }
 
 

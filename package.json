@@ -9,16 +9,22 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@floating-ui/react": "^0.27.16",
+    "@floating-ui/react-dom": "^2.1.6",
     "@headlessui/react": "^2.2.9",
+    "@tanstack/react-table": "^8.21.3",
     "axios": "^1.12.2",
+    "dompurify": "^3.3.0",
     "lucide-react": "^0.544.0",
     "next": "14.2.33",
     "react": "^18",
     "react-dom": "^18",
     "swiper": "^12.0.2",
+    "use-debounce": "^10.0.6",
     "zod": "^4.1.12"
   },
   "devDependencies": {
+    "@types/dompurify": "^3.0.5",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",

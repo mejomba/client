@@ -20,7 +20,6 @@ export default function CountdownTimer({ startSeconds = 90 }) {
 
   const handleResend = () => {
     // اینجا می‌تونی درخواست ارسال مجدد OTP بزنی
-    console.log("ارسال مجدد کد تأیید...");
 
     setTimeLeft(startSeconds); // شمارش مجدد از ابتدا
     setIsActive(true); // فعال‌سازی دوباره تایمر
