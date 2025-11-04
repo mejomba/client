@@ -1,29 +1,32 @@
-import {HelpPageContent, HelpPageContentList} from '@/app/types';
+import {HelpPageContentList} from '@/app/types';
 import Link from 'next/link';
 
 interface Props {
     content: HelpPageContentList[];
 }
 
-// این یک Server Component است
-export default function MainContent({content}: Props) {
-    const category_name = content[0]?.breadcrumb
-    // const breadcrumbs = [{'path': '/help', 'title': 'help'}, {'path': '#', 'title': category_name}] // وقتی صفحه help داشتیم بعدا
-    // const breadcrumbs = [{'path': '#', 'title': category_name}]
-    const breadcrumbs = category_name
+// interface Props {
+//     content: HelpPageContent[];
+// }
 
+// این یک Server Component است
+export default function MainContent({ content }: Props) {
+    console.log(content)
+    const category_name = content[0]?.category_name
+    const breadcrumbs = content[0]?.breadcrumb //[ 'cat 1', 'cat 3', 'cat 4 with long long name long longggg name' ]
+    const breadcrumb = Object.entries(breadcrumbs)
     return (
         <div className="container max-width-500">
             {content.length > 0 ? (
                 <div className="flex-1 p-8">
                     <nav className="mb-4 text-sm text-gray-500">
-                        {breadcrumbs.map((crumb, index) => (
-                            <span key={crumb}>
-                <Link href="" className="hover:underline">
-                  {crumb}
-                </Link>
-                                {index < breadcrumbs.length - 1 && ' / '}
-              </span>
+                        {breadcrumb.map(([title, slug], index) => (
+                            <span key={slug}>
+                                <Link href={slug} className="hover:underline">
+                                  {title}
+                                </Link>
+                                {index < breadcrumb.length - 1 && ' / '}
+                              </span>
                         ))}
                     </nav>
 
@@ -33,9 +36,8 @@ export default function MainContent({content}: Props) {
 
                     <div className="space-y-3">
                         {content.map((article) => (
-                            <div className="flex-1 py-1">
+                            <div key={article.id} className="flex-1 py-1">
                                 {/* لیست مقالات */}
-
                                 <Link
                                     key={article.id}
                                     href={`/help/post/${article.slug}`}
@@ -43,10 +45,7 @@ export default function MainContent({content}: Props) {
                                 >
                                     {article.title}
                                 </Link>
-
-
                             </div>
-
                         ))}
                     </div>
                 </div>

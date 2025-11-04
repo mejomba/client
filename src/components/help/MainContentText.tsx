@@ -1,28 +1,30 @@
-import {HelpPageContent, HelpPageContentList} from '@/app/types';
+import {HelpPageContent} from '@/app/types';
 import Link from 'next/link';
 
+// interface Props {
+//     content: HelpPageContentList;
+// }
+
 interface Props {
-    content: HelpPageContentList;
+    content: HelpPageContent;
 }
 
 // این یک Server Component است
 export default function MainContentText({content}: Props) {
-    // console.log(content)
-    // const category_name = content[0]?.breadcrumb
-    // const breadcrumbs = [{'path': 'a', 'title': 'help'}, {'path': '#', 'title': category_name}]
-    // const breadcrumbs = content.breadcrumb
+    const breadcrumbs = content?.breadcrumb //[ 'cat 1', 'cat 3', 'cat 4 with long long name long longggg name' ]
+    const breadcrumb = Object.entries(breadcrumbs)
     return (
         <div className="container w-200">
             {content ? (
                 <div className="flex-1 p-8">
                     <nav className="mb-4 text-sm text-gray-500">
-                        {content.breadcrumb.map((crumb, index) => (
-                            <span key={crumb}>
-                <Link href={crumb} className="hover:underline">
-                  {crumb}
-                </Link>
-                                {index < content.breadcrumb.length - 1 && ' / '}
-              </span>
+                        {breadcrumb.map(([title, slug], index) => (
+                            <span key={slug}>
+                                <Link href={slug} className="hover:underline">
+                                  {title}
+                                </Link>
+                                {index < breadcrumb.length - 1 && ' / '}
+                              </span>
                         ))}
                     </nav>
 
@@ -34,11 +36,7 @@ export default function MainContentText({content}: Props) {
 
                             <div className="flex-1 py-1">
                                 {content.content}
-
-
                             </div>
-
-
                     </div>
                 </div>
             ) : (

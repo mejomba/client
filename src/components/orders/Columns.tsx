@@ -1,25 +1,23 @@
 'use client';
 
 import { ColumnDef } from '@tanstack/react-table';
-import {Plus, Minus, Download, CircuitBoard, ScrollText, BadgeDollarSign} from 'lucide-react';
+import {Plus, Minus, CircuitBoard, ScrollText, BadgeDollarSign} from 'lucide-react';
 import { type Order } from '@/app/types';
 import { useState } from "react"
 import { useRef } from "react"
 
-export default function PaymentUpload({config, orderId}: {text: string, style: string, orderId: number}) {
+export default function PaymentUpload({orderId}: { orderId: number}) {
   const [file, setFile] = useState<File | null>(null)
   const [loading, setLoading] = useState(false)
   const [submitMessage, setsubmitMessage] = useState('')
 
   async function submit() {
-    console.log('submit call...')
     if (!file) return
 
     setLoading(true)
     const formData = new FormData()
     formData.append("file", file)
     formData.append("order", String(orderId))
-    console.log('submit call...')
 
     const res = await fetch("/api/orders/payment/upload", { // API route next
       method: "POST",
@@ -93,7 +91,7 @@ const StatusBadge = ({ status, orderId }: { status: Order['status'], orderId: nu
 
   return (
       <span>
-        {status === 'quotation' && <PaymentUpload config={config} orderId={orderId} />}
+        {status === 'quotation' && <PaymentUpload orderId={orderId} />}
 
         {status !== 'quotation' && (
             <span>
@@ -172,7 +170,6 @@ export const columns: ColumnDef<Order>[] = [
                 <ScrollText size={24}/>
               </a>
           )}
-          {console.log(order)}
           {order.payments_urls && order.payments_urls.map((pay: string, idx: number) => (
 
             <a

@@ -31,7 +31,7 @@ export default function OtpVerifyFormClient({
   // 📩 تابع ارسال مجدد کد
   const handleResend = async () => {
     try {
-      const res = await api.post('/auth/resend-otp/', {phone})
+      await api.post('/auth/resend-otp/', {phone})
 
       setSeconds(120)
       setCanResend(false)

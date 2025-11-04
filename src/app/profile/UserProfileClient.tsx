@@ -9,16 +9,16 @@ import {formatNumber} from "@/lib/utils";
 
 
 /* ---------------------- Helper UI components ---------------------- */
-function StatCard({ title, value }) {
+function StatCard({ title, value }: { title: string; value: string | number }) {
   return (
     <div className="p-3 sm:p-4 rounded-lg bg-white shadow-md">
       <div className="text-sm text-slate-500">{title}</div>
-      <div className="text-xl sm:text-2xl font-semibold">{formatNumber(value)}</div>
+      <div className="text-xl sm:text-2xl font-semibold">{formatNumber(Number(value))}</div>
     </div>
   );
 }
 
-function Card({ title, children }) {
+function Card({ title, children }: { title: string; children: React.ReactNode }) {
   return (
     <div className="p-3 sm:p-4 bg-white rounded-2xl shadow-sm">
       <div className="flex items-center justify-between mb-2 sm:mb-3">
@@ -30,7 +30,7 @@ function Card({ title, children }) {
 }
 // ... بقیه کامپوننت‌های کمکی
 
-export function UserProfileClient({ initialOrders, user }: { initialOrders: Order[], User }) {
+export function UserProfileClient({ initialOrders, user }: { initialOrders: Order[], user: User }) {
   const [tab, setTab] = useState("orders"); // تب پیش‌فرض را روی سفارش‌ها گذاشتم
 
   return (
@@ -182,7 +182,7 @@ export function UserProfileClient({ initialOrders, user }: { initialOrders: Orde
 // =============================================
 
 
-function OrdersList({ orders }) {
+function OrdersList({ orders }: { orders: Order[] }) {
   if (!orders?.length)
     return <div className="text-sm text-slate-500">هیچ سفارشی ثبت نشده است.</div>;
 
@@ -252,149 +252,6 @@ function OrdersList({ orders }) {
 }
 
 /* ---------------------- Sample data ---------------------- */
-const sampleOrders = {
-    "count": 11,
-    "next": null,
-    "previous": null,
-    "results": [
-        {
-            "id": 11,
-            "user": 1,
-            "user_name": null,
-            "quantity": 1,
-            "status": "pending",
-            "created_at": "2025-10-15T21:08:06.148366Z",
-            "updated_at": "2025-10-15T21:08:06.148454Z",
-            "file": "/path/to/file",
-            "selections": [
-                {
-                    "id": 17,
-                    "attribute": 1,
-                    "attribute_name": "Base Material",
-                    "selected_option": 1,
-                    "selected_option_name": "fr4",
-                    "value": "FR-4"
-                },
-                {
-                    "id": 18,
-                    "attribute": 2,
-                    "attribute_name": "Layers",
-                    "selected_option": 4,
-                    "selected_option_name": "2-layer",
-                    "value": "2"
-                },
-                {
-                    "id": 19,
-                    "attribute": 3,
-                    "attribute_name": "Different Design",
-                    "selected_option": 6,
-                    "selected_option_name": "اسم نوع طراحی",
-                    "value": "1"
-                },
-                {
-                    "id": 20,
-                    "attribute": 4,
-                    "attribute_name": "Delivery Format",
-                    "selected_option": 10,
-                    "selected_option_name": "Single PCB",
-                    "value": "single pcb"
-                },
-                {
-                    "id": 21,
-                    "attribute": 5,
-                    "attribute_name": "PCB Thickness",
-                    "selected_option": 13,
-                    "selected_option_name": "0.4",
-                    "value": "0.4"
-                },
-                {
-                    "id": 22,
-                    "attribute": 6,
-                    "attribute_name": "PCB Color",
-                    "selected_option": 19,
-                    "selected_option_name": "White",
-                    "value": "white"
-                },
-                {
-                    "id": 23,
-                    "attribute": 7,
-                    "attribute_name": "ویژگی 1",
-                    "selected_option": 22,
-                    "selected_option_name": "گزینه 1",
-                    "value": "گزینه 1"
-                }
-            ]
-        },
-        {
-            "id": 10,
-            "user": 1,
-            "user_name": null,
-            "quantity": 1,
-            "status": "pending",
-            "created_at": "2025-10-15T21:05:29.024355Z",
-            "updated_at": "2025-10-15T21:05:29.024523Z",
-            "file": "/path/to/file",
-            "selections": [
-                {
-                    "id": 10,
-                    "attribute": 1,
-                    "attribute_name": "Base Material",
-                    "selected_option": 1,
-                    "selected_option_name": "fr4",
-                    "value": "FR-4"
-                },
-                {
-                    "id": 11,
-                    "attribute": 2,
-                    "attribute_name": "Layers",
-                    "selected_option": 4,
-                    "selected_option_name": "2-layer",
-                    "value": "2"
-                },
-                {
-                    "id": 12,
-                    "attribute": 3,
-                    "attribute_name": "Different Design",
-                    "selected_option": 6,
-                    "selected_option_name": "اسم نوع طراحی",
-                    "value": "1"
-                },
-                {
-                    "id": 13,
-                    "attribute": 4,
-                    "attribute_name": "Delivery Format",
-                    "selected_option": 10,
-                    "selected_option_name": "Single PCB",
-                    "value": "single pcb"
-                },
-                {
-                    "id": 14,
-                    "attribute": 5,
-                    "attribute_name": "PCB Thickness",
-                    "selected_option": 13,
-                    "selected_option_name": "0.4",
-                    "value": "0.4"
-                },
-                {
-                    "id": 15,
-                    "attribute": 6,
-                    "attribute_name": "PCB Color",
-                    "selected_option": 17,
-                    "selected_option_name": "Green",
-                    "value": "green"
-                },
-                {
-                    "id": 16,
-                    "attribute": 7,
-                    "attribute_name": "ویژگی 1",
-                    "selected_option": 23,
-                    "selected_option_name": "گزینه 2",
-                    "value": "گزینه 2"
-                }
-            ]
-        }
-    ]
-};
 
 const sampleDesigns = [
   { id: 1, name: "Motor controller", updated: "2025-09-10", layers: 2 },

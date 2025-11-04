@@ -27,6 +27,7 @@ const FormField = ({ label, guid, children }: Props) => {
     middleware: [offset(8), flip(), shift({ padding: 8 }), arrow({ element: arrowRef })],
     whileElementsMounted: autoUpdate, // ← این قسمت باعث رفتار هوشمند و بلادرنگ میشه
   });
+  console.log(update)
 
   // موقعیت فلش بر اساس جهت Tooltip
   const staticSide = {

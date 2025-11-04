@@ -1,17 +1,16 @@
 import Link from "next/link";
 import {ClipboardList, Folder, Settings, Mail, Ticket, User} from "lucide-react";
 import {cookies} from "next/headers";
-import {redirect} from "next/navigation";
 import { logout } from "@/lib/actions/auth";
 
 
 export default function SignInMenu() {
     const acce_token = cookies().get('access')
-    const handleLogout = async () => {
-        // در صورت وجود API خروج، اینجا فراخوانی کن
-        document.cookie = "access_token=; Max-Age=0; path=/;";
-        redirect('/');
-    };
+    // const handleLogout = async () => {
+    //     // در صورت وجود API خروج، اینجا فراخوانی کن
+    //     document.cookie = "access_token=; Max-Age=0; path=/;";
+    //     redirect('/');
+    // };
     return (
         <div className="relative inline-block text-left group">
             {acce_token ? (

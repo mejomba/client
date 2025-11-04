@@ -4,7 +4,13 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import api from "@/lib/axios";
 import { z } from 'zod'
-import axios from "axios/index";
+
+export interface Error {
+  message: string;
+  detail: string;
+  request: string;
+  response: string;
+}
 
 // اعتبارسنجی با Zod (اختیاری ولی حرفه‌ای)
 const phoneSchema = z.object({
@@ -13,7 +19,7 @@ const phoneSchema = z.object({
     .regex(/^09\d{9}$/, { message: 'شماره موبایل معتبر نیست.' }),
 })
 
-const API_BASE = process.env.NEXT_PUBLIC_BASE_URL || 'http://127.0.0.1:8000/api/v1'
+// const API_BASE = process.env.NEXT_PUBLIC_BASE_URL || 'http://127.0.0.1:8000/api/v1'
 
 // export async function sendOtpAction(formData: FormData) {
 //   const phone = formData.get('phone') as string
@@ -30,14 +36,14 @@ const API_BASE = process.env.NEXT_PUBLIC_BASE_URL || 'http://127.0.0.1:8000/api/
 //   redirect(`/auth/login?phone=${phone}&step=${next_step}`)
 // }
 
-export async function sendOtpAction(prevState: any, formData: FormData) {
+export async function sendOtpAction(prevState: {error:string,success:boolean}, formData: FormData) {
   const phone = formData.get('phone') as string
   let next_step;
 
   // 🔸 اعتبارسنجی شماره
   const result = phoneSchema.safeParse({ phone })
   if (!result.success) {
-    return { error: result.error.issues[0].message }
+    return { error: result.error.issues[0].message, success: false }
   }
 
   // 🔸 تماس با API بک‌اند
@@ -54,13 +60,16 @@ export async function sendOtpAction(prevState: any, formData: FormData) {
     next_step = phone_check_res.data.next_step
     // return { success: true }
   } catch (e) {
-    return { error: 'ارتباط با سرور برقرار نشد.' }
+    console.log(e)
+    // return { error: e.message , success: false}
+    return { error: 'error' , success: false}
   }
 
   redirect(`/auth/login?phone=${phone}&step=${next_step}`)
 }
 
-export async function verifyOtpAction(prevState: any, formData: FormData) {
+// export async function verifyOtpAction(prevState: any, formData: FormData) {
+export async function verifyOtpAction(prevState: { error: string, success: boolean }, formData: FormData) {
   const phone = formData.get('phone') as string
   const code = formData.get('otp_code') as string
   const next_step = formData.get('next_step') as 'login' | 'register'
@@ -83,49 +92,47 @@ export async function verifyOtpAction(prevState: any, formData: FormData) {
       cookieStore.set('access', data.access, { httpOnly: true })
       cookieStore.set('refresh', data.refresh, { httpOnly: true})
     }
-  } catch (error: any) {
-  if (error.response) {
-    const data = error.response.data;
+  } catch (error: unknown) {
+  if (error) {
+    // const data = error.response.data;
 
     // اگر خطا به شکل {"detail": "..."} باشد
-    if (data.detail) {
-      return { error: data.detail };
-    }
+    // if (data.detail) {
+    //   return { error: data.detail, success: false };
+    // }
 
     // اگر خطا شامل فیلدهای مختلف باشد، مثل {"phone": ["شماره نامعتبر است."]}
-    if (typeof data === "object") {
-      const firstKey = Object.keys(data)[0];
-      const firstError = data[firstKey];
+    // if (typeof data === "object") {
+    //   const firstKey = Object.keys(data)[0];
+    //   const firstError = data[firstKey];
 
-      // اگر مقدار یک آرایه باشد (مثل لیست خطاهای serializer)
-      if (Array.isArray(firstError)) {
-        return { error: firstError[0] };
-      }
+      // if (Array.isArray(firstError)) {
+      //   return { error: firstError[0], success: false };
+      // }
 
-      // اگر مقدار فقط رشته باشد
-      if (typeof firstError === "string") {
-        return { error: firstError };
-      }
+      // if (typeof firstError === "string") {
+      //   return { error: firstError, success: false };
+      // }
     }
 
     // اگر هیچکدوم از بالا نبود
-    return { error: "در پردازش درخواست خطایی رخ داد." };
+    return { error: "در پردازش درخواست خطایی رخ داد.", success: false };
   }
 
   // اگر سرور پاسخی نداده باشد
-  if (error.request) {
-    return { error: "ارتباط با سرور برقرار نشد. لطفاً دوباره تلاش کنید." };
-  }
+  // if (error.request) {
+  //   return { error: "ارتباط با سرور برقرار نشد. لطفاً دوباره تلاش کنید.", success: false };
+  // }
 
   // سایر خطاهای غیرمنتظره (مثلاً کدنویسی یا باگ)
-  return { error: error.message || "خطای ناشناخته‌ای رخ داد." };
-}
+  // return { error: error.message || "خطای ناشناخته‌ای رخ داد." , success: false};
+// }
 
   redirect('/profile/')
 }
 
 // 🔹 ورود با رمز عبور
-export async function passwordLoginAction(prevState: any, formData: FormData) {
+export async function passwordLoginAction(prevState: {error:string, success:boolean}, formData: FormData) {
   const phone = formData.get('phone') as string
   const password = formData.get('password') as string
   const endpoint = '/auth/login/'
@@ -145,42 +152,39 @@ export async function passwordLoginAction(prevState: any, formData: FormData) {
       cookieStore.set('access', data.access, { httpOnly: true })
       cookieStore.set('refresh', data.refresh, { httpOnly: true })
     }
-  } catch (error: any) {
-    if (error.response) {
-      const data = error.response.data;
+  } catch (error) {
+    if (error) {
+      // const data = error.response.data;
 
-      // اگر خطا به شکل {"detail": "..."} باشد
-      if (data.detail) {
-        return {error: data.detail};
-      }
+      // if (data.detail) {
+      //   return {error: data.detail, success: false};
+      // }
 
-      // اگر خطا شامل فیلدهای مختلف باشد، مثل {"phone": ["شماره نامعتبر است."]}
-      if (typeof data === "object") {
-        const firstKey = Object.keys(data)[0];
-        const firstError = data[firstKey];
+      // if (typeof data === "object") {
+      //   const firstKey = Object.keys(data)[0];
+      //   const firstError = data[firstKey];
 
-        // اگر مقدار یک آرایه باشد (مثل لیست خطاهای serializer)
-        if (Array.isArray(firstError)) {
-          return {error: firstError[0]};
-        }
+        // if (Array.isArray(firstError)) {
+        //   return {error: firstError[0], success: false};
+        // }
 
         // اگر مقدار فقط رشته باشد
-        if (typeof firstError === "string") {
-          return {error: firstError};
-        }
-      }
+        // if (typeof firstError === "string") {
+        //   return {error: firstError, success: false};
+        // }
+      // }
 
       // اگر هیچکدوم از بالا نبود
-      return {error: "در پردازش درخواست خطایی رخ داد."};
+      return {error: "در پردازش درخواست خطایی رخ داد.", success: false};
     }
 
     // اگر سرور پاسخی نداده باشد
-    if (error.request) {
-      return {error: "ارتباط با سرور برقرار نشد. لطفاً دوباره تلاش کنید."};
+    if (error) {
+      return {error: "ارتباط با سرور برقرار نشد. لطفاً دوباره تلاش کنید.", success: false};
     }
 
     // سایر خطاهای غیرمنتظره (مثلاً کدنویسی یا باگ)
-    return {error: error.message || "خطای ناشناخته‌ای رخ داد."};
+    return {error: "خطای ناشناخته‌ای رخ داد.", success: false};
   }
 
   redirect('/profile/')

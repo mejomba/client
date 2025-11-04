@@ -9,7 +9,7 @@ const api = axios.create({
 })
 
 api.interceptors.request.use(config => {
-  let accessToken = getAccessToken()
+  const accessToken = getAccessToken()
   // const csrftoken = cookieStore.get('csrftoken')
   // if (csrftoken) {
   //   config.headers['X-CSRFToken'] = csrftoken

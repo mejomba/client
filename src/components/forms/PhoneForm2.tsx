@@ -1,6 +1,4 @@
 import Link from 'next/link'
-import {sendOtpAction} from '@/lib/actions/auth'
-import CountDownTimer from "@/components/CountDownTimer";
 import PhoneFormClient from "@/components/forms/PhoneFormClient";
 
 export default function PhoneForm2() {

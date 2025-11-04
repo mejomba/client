@@ -7,7 +7,6 @@ import Accordion from "@/components/Accordion";
 import FormField from "@/components/FormField";
 import RadioGroup from "@/components/RadioGroup";
 import { submitPcbForm } from "./actions";
-import {log} from "util"; // ایمپورت اکشن سروری
 
 const initializeFormData = (groups: ApiGroup[]): { [key: string]: string } => {
   const initialState: { [key: string]: string } = {};
@@ -23,14 +22,16 @@ const initializeFormData = (groups: ApiGroup[]): { [key: string]: string } => {
 };
 
 export default function PcbOrderPage() {
-  const [formData, setFormData] = useState<{ [key: string]: string }>({});
-  const [payload, setPayload] = useState<{ [key: string]: string }>({});
+  type FormValue = string | File | null
+  const [formData, setFormData] = useState<Record<string, FormValue>>({});
+
+  // const [payload, setPayload] = useState<{ [key: string]: string }>({});
   const [groups, setGroups] = useState<ApiGroup[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [submitMessage, setSubmitMessage] = useState<string | null>(null);
   const [submitting, setSubmitting] = useState(false);
-  const [uploadedUrl, setUploadedUrl] = useState<string | null>(null)
+  // const [uploadedUrl, setUploadedUrl] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -40,6 +41,7 @@ export default function PcbOrderPage() {
         setGroups(response.data.results);
         setFormData(initializeFormData(response.data.results));
       } catch (err) {
+        console.log(err)
         setError("خطا در دریافت اطلاعات.");
       } finally {
         setLoading(false);
@@ -53,13 +55,15 @@ export default function PcbOrderPage() {
   };
 
   const renderFormControl = (attribute: ApiAttribute) => {
+    const raw = formData[attribute.name];
+    const selectedValue = typeof raw === "string" ? raw : "";
     switch (attribute.control_type) {
       case "radio_button":
         return (
           <RadioGroup
             name={attribute.name}
             options={attribute.options}
-            selectedValue={formData[attribute.name] || ""}
+            selectedValue={selectedValue}
             onChange={(value) => handleFormChange(attribute.name, value)}
           />
         );
@@ -69,12 +73,14 @@ export default function PcbOrderPage() {
             <RadioGroup
             name={attribute.name}
             options={attribute.options}
-            selectedValue={formData[attribute.name] || ""}
+            // selectedValue={formData[attribute.name] || ""}
+            selectedValue={selectedValue}
             onChange={(value) => handleFormChange(attribute.name, value)}
           />
           <input
             type="text"
-            value={formData[attribute.name] || ""}
+            // value={formData[attribute.name] || ""}
+            value={selectedValue}
             onChange={(e) => handleFormChange(attribute.name, e.target.value)}
             className="w-24 border border-gray-300 rounded-sm p-1 text-center text-sm"
           />
@@ -114,34 +120,19 @@ export default function PcbOrderPage() {
     };
   };
 
-  const handleSubmit_ = async () => {
-    try {
-      setSubmitting(true);
-      setSubmitMessage(null);
-
-      const payload = buildSubmitPayload(formData, groups);
-      const result = await submitPcbForm(payload);
-
-      // const result = await submitPcbForm(formData);
-
-      if (result.success) {
-        setSubmitMessage("✅ فرم با موفقیت ثبت شد!");
-      } else {
-        setSubmitMessage(`❌ ${result.message}`);
-      }
-    } catch (e) {
-      setSubmitMessage("❌ خطا در ارسال فرم");
-    } finally {
-      setSubmitting(false);
-    }
-  };
 
   const handleSubmit = async () => {
     try {
       setSubmitting(true);
       setSubmitMessage(null);
 
-      const payload = buildSubmitPayload(formData, groups);
+      // فقط مقادیر string را extract کن
+      const textFormData: Record<string, string> = Object.fromEntries(
+        Object.entries(formData)
+          .filter(([, value]) => typeof value === "string")
+      ) as Record<string, string>;
+
+      const payload = buildSubmitPayload(textFormData, groups);
 
       // 👇 ساخت FormData برای ارسال multipart
       const form = new FormData();
@@ -184,7 +175,7 @@ export default function PcbOrderPage() {
       <div className="max-w-4xl mx-auto bg-white rounded-lg shadow-md py-6 px-3">
         <input
             type="file"
-            onChange={(e) => setFormData({...formData, file: e.target.files?.[0]})}
+            onChange={(e) => setFormData({...formData, file: e.target.files?.[0] ?? null})}
         />
 
         {mainGroup && (

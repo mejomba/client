@@ -55,7 +55,7 @@ export type Order = {
   user: number;
   user_name: string | null;
   quantity: number;
-  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled'; // می‌توانید وضعیت‌های دیگر را اضافه کنید
+  status: 'pending' | 'quotation' | 'process' | 'pending_delivery' | 'deliver' | 'canceled'; // می‌توانید وضعیت‌های دیگر را اضافه کنید
   created_at: string; // تاریخ به صورت ISO string
   updated_at: string;
   file: string;
@@ -81,21 +81,32 @@ export interface HelpMenuItem {
   child?: HelpMenuItem[]; // هر آیتم می‌تواند آرایه‌ای از آیتم‌های فرزند داشته باشد
 }
 
+interface Breadcrumb {
+  [title: string]: string
+}
+
 // تعریف داده‌های لازم برای محتوای اصلی
 export interface HelpPageContent {
-  breadcrumbs: { title: string; path: string }[];
+  breadcrumb: Breadcrumb;
   title: string;
-  articles: { title: string; path: string }[];
+  slug: string;
+  content: string;
+  guid_content: string;
+  id: number;
+  category: string;
 }
 
 export interface HelpPageContentList {
-  id: number;
-  title: string;
-  slug: string;
+  breadcrumb: Breadcrumb;
   category_name: string;
-  breadcrumb: string[];
+  id: number;
+  slug: string;
+  title: string;
+  // posts: HelpPageContent[];
 }
 
 export interface User {
   id: number;
+  phone: string;
+  avatar: string;
 }

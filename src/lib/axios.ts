@@ -13,7 +13,7 @@ api.interceptors.request.use(config => {
   let accessToken = getAccessToken()
   const cookieStore = cookies()
   // let refreshToken = cookieStore.get('refresh')
-  if (!accessToken){accessToken = cookieStore.get('access')?.value}
+  if (!accessToken){accessToken = cookieStore.get('access')?.value ?? null}
   const csrftoken = cookieStore.get('csrftoken')
   if (csrftoken) {
     config.headers['X-CSRFToken'] = csrftoken

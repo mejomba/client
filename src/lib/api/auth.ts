@@ -1,6 +1,5 @@
 // lib/api/auth.ts
 import api from '@/lib/axios'
-import { cookies } from 'next/headers'
 
 interface Tokens {
     access: string

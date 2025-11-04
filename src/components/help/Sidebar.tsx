@@ -3,14 +3,14 @@
 import { HelpMenuItem } from '@/app/types';
 import Link from 'next/link';
 
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 
 // تایپ پراپس‌های کامپوننت
 interface SidebarProps {
-  id: number;
+  // id: number;
   menuItems: HelpMenuItem[];
   activePath: string; // مسیر فعلی برای هایلایت کردن
 }
@@ -48,11 +48,26 @@ function MenuTree({
               style={{ paddingLeft }}
               onClick={() => hasChildren && toggleItem(item.id)}
             >
+              {/*<Link*/}
+              {/*    onClick={(e) => {*/}
+              {/*      hasChildren && e.preventDefault();*/}
+              {/*    }}*/}
+              {/*  href={hasChildren ? "" : "/help/" + item.slug}*/}
+              {/*  className="py-2 flex-grow"*/}
+              {/*>*/}
+              {/*  {item.title}*/}
+              {/*</Link>*/}
+
               <Link
-                  onClick={(e) => {
-                    hasChildren && e.preventDefault();
-                  }}
-                href={hasChildren ? "" : "/help/" + item.slug}
+                href={hasChildren ? "#" : `/help/${item.slug}`}
+                onClick={(e: React.MouseEvent<HTMLAnchorElement>) => {
+                  if (hasChildren) {
+                    e.preventDefault()
+                    // اگر می‌خواهی باز/بسته شدن منو را هم اینجا انجام دهی:
+                    // toggleOpen(item.id)
+                  }
+                }}
+                aria-disabled={hasChildren ? true : undefined}
                 className="py-2 flex-grow"
               >
                 {item.title}
@@ -97,8 +112,9 @@ export default function Sidebar({ menuItems, activePath }: SidebarProps) {
   const activeId = menuItems.find((item) => item.slug === activePath)?.id || null;
 
   const [openItems, setOpenItems] = useState<Set<string>>(
-    new Set([activeId?.toString()])
-  );
+   activeId ? new Set([activeId.toString()]) : new Set()
+  )
+
   const [collapsed, setCollapsed] = useState(false);
 
   const toggleItem = (id: string) => {

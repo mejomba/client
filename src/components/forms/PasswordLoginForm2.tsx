@@ -1,5 +1,4 @@
 import Link from 'next/link'
-import {passwordLoginAction, sendOtpAction} from '@/lib/actions/auth'
 import PasswordLoginFormClient from "@/components/forms/PasswordLoginFormClient";
 
 export default function PasswordLoginForm2() {

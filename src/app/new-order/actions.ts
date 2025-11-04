@@ -1,22 +1,24 @@
 "use server";
 
-import { cookies } from "next/headers";
 import api from "@/lib/axios"; // نسخه‌ی سروری axios (توضیح پایین)
 
-export async function submitPcbForm(formData: Record<string, string>) {
-// export async function submitPcbForm(payload: Record<string, any>) {
-  try {
-    // const cookieStore = cookies();
-    // const accessToken = cookieStore.get("access_token")?.value;
-    //
-    // if (!accessToken) {
-    //   throw new Error("توکن یافت نشد، لطفا دوباره وارد شوید.");
-    // }
 
+// type SubmitPayload = {
+//   quantity: number;
+//   status: string;
+//   selections: {
+//     attribute: number;
+//     selected_option: number | null;
+//     value: string | number | null;
+//   }[];
+// };
+
+
+export async function submitPcbForm(form: FormData) {
+  try {
     const response = await api.post(
       "/pcb/orders/",
-      formData,
-      // payload,
+      form,
       {
         headers: {
           'Content-Type': 'multipart/form-data',
@@ -25,12 +27,12 @@ export async function submitPcbForm(formData: Record<string, string>) {
     );
 
     return { success: true, data: response.data };
-  } catch (error: any) {
-    // console.error("Error submitting form:", error);
-    console.error("Error submitting form:");
+  } catch (error) {
+    console.error("Error submitting form:", error);
     return {
       success: false,
-      message: error?.response?.data?.detail || "خطا در ثبت فرم",
+      // message: error?.response?.data?.detail || "خطا در ثبت فرم",
+      message: "خطا در ثبت فرم",
     };
   }
 }

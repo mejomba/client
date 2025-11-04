@@ -5,11 +5,15 @@ import api from '@/lib/axios'
 
 // شبیه‌سازی واکشی داده‌ها از دیتابیس یا CMS در سرور
 async function getMenuData(): Promise<HelpMenuItem[]> {
-  // این داده‌ها دقیقا بر اساس تصویر شما ساخته شده‌اند
-  const res = await api.get('/blog/category/list/', {});
-
-  if (res.status === 200){
-    return res.data.results as HelpMenuItem
+  try {
+    const res = await api.get('/blog/category/list/')
+    if (res.status === 200) {
+      return res.data.results as HelpMenuItem[]
+    }
+    return []
+  } catch (error) {
+    console.error("getMenuData error:", error)
+    return []
   }
 }
 
@@ -17,9 +21,11 @@ async function getPageContent({ params }: { params: { slug: string } }): Promise
   try{
     const res = await api.get(`/blog/guid/${params.slug}/`)
     if (res.status === 200){
-      console.log(res)
       return res.data
     }
+
+    throw new Error("Unexpected response status")
+
   } catch (error) {
     console.error("Error fetching help page content:", error);
     throw new Error("Failed to fetch help page content");
@@ -27,8 +33,9 @@ async function getPageContent({ params }: { params: { slug: string } }): Promise
 }
 
 // این صفحه یک Server Component است
-export default async function HelpDetailCenterPage(slug: string) {
+export default async function HelpDetailCenterPage({ params }: { params: { slug: string } }) {
   // 1. واکشی داده‌ها در سرور
+  const slug = {params}
   const menuItems = await getMenuData();
   const pageContent = await getPageContent(slug);
 
