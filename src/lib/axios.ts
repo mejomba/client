@@ -28,8 +28,7 @@ api.interceptors.request.use(config => {
 })
 
 let isRefreshing = false;
-// let failedQueue: any[] = [];
-let failedQueue: unknown[] = [];
+let failedQueue: any[] = [];
 
 const processQueue = (error: any, token: string | null = null) => {
   failedQueue.forEach(prom => {
